@@ -5,6 +5,9 @@ import random
 
 delay = 0.1
 
+score = 0
+high_score = 0
+
 wn = turtle.Screen()
 wn.title("Snakey")
 wn.bgcolor("white")
@@ -24,8 +27,22 @@ apple.speed(0)
 apple.shape("circle")
 apple.color("red")
 apple.penup()
+apple.goto(0, 40)
 
 segments = []
+
+pen = turtle.Turtle()
+pen.speed(0)
+pen.shape("square")
+pen.color("black")
+pen.penup()
+pen.hideturtle()
+pen.goto(0, 260)
+pen.write(
+    "Score: 0  High Score: 0",
+    align="center",
+    font=("Courier", 24, "normal")
+)
 
 def go_up():
     if head.direction != "down":
@@ -67,18 +84,37 @@ wn.onkeypress(go_right, "Right")
 while True:
     wn.update()
 
-    if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:
+    if head.xcor()>290 or head.xcor()<-290 or head.ycor()>250 or head.ycor()<-290:
         time.sleep(1)
         head.goto(0,0)
         head.direction = "stop"
         for segment in segments:
             segment.goto(1000, 1000)
         segments.clear()
+        score = 0
+        delay = 0.1
+        pen.clear()
+        pen.write(
+            "Score: {}  High Score: {}".format(score, high_score),
+            align="center",
+            font=("Courier", 24, "normal")
+        )
         x = random.randint(-14, 14)
-        y = random.randint(-14, 14)
+        y = random.randint(-14, 12)
         apple.goto(x*20, y*20)
 
     if head.distance(apple) < 20:
+        score += 1
+        delay *= 0.95
+        if score > high_score:
+            high_score = score
+
+        pen.clear()
+        pen.write(
+            "Score: {}  High Score: {}".format(score, high_score),
+            align="center",
+            font=("Courier", 24, "normal")
+        )
         x = random.randint(-14, 14)
         y = random.randint(-14, 14)
         apple.goto(x*20, y*20)
@@ -110,6 +146,14 @@ while True:
             for segment in segments:
                 segment.goto(1000, 1000)
             segments.clear()
+            score = 0
+            delay = 0.1
+            pen.clear()
+            pen.write(
+                "Score: {}  High Score: {}".format(score, high_score),
+                align="center",
+                font=("Courier", 24, "normal")
+            )
             x = random.randint(-14, 14)
             y = random.randint(-14, 14)
             apple.goto(x*20, y*20)
