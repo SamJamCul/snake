@@ -24,21 +24,24 @@ apple.speed(0)
 apple.shape("circle")
 apple.color("red")
 apple.penup()
-apple.goto(0,0)
 
 segments = []
 
 def go_up():
-    head.direction = "up"
+    if head.direction != "down":
+        head.direction = "up"
 
 def go_down():
-    head.direction = "down"
+    if head.direction != "up":
+        head.direction = "down"
 
 def go_left():
-    head.direction = "left"
+    if head.direction != "right":
+        head.direction = "left"
 
 def go_right():
-    head.direction = "right"
+    if head.direction != "left":
+        head.direction = "right"
 
 
 def move():
@@ -64,6 +67,17 @@ wn.onkeypress(go_right, "Right")
 while True:
     wn.update()
 
+    if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:
+        time.sleep(1)
+        head.goto(0,0)
+        head.direction = "stop"
+        for segment in segments:
+            segment.goto(1000, 1000)
+        segments.clear()
+        x = random.randint(-14, 14)
+        y = random.randint(-14, 14)
+        apple.goto(x*20, y*20)
+
     if head.distance(apple) < 20:
         x = random.randint(-14, 14)
         y = random.randint(-14, 14)
@@ -87,6 +101,19 @@ while True:
         segments[0].goto(x, y)
 
     move()
+
+    for segment in segments:
+        if head.distance(segment) < 20:
+            time.sleep(1)
+            head.goto(0,0)
+            head.direction = "stop"
+            for segment in segments:
+                segment.goto(1000, 1000)
+            segments.clear()
+            x = random.randint(-14, 14)
+            y = random.randint(-14, 14)
+            apple.goto(x*20, y*20)
+
 
     time.sleep(delay)
 
